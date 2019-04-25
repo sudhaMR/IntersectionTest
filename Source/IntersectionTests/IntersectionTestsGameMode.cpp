@@ -6,6 +6,6 @@
 
 AIntersectionTestsGameMode::AIntersectionTestsGameMode()
 {
-	DefaultPawnClass = AIntersectionTestsPawn::StaticClass();
+	//DefaultPawnClass = AIntersectionTestsPawn::StaticClass();
 	HUDClass = AIntersectionTestsHud::StaticClass();
 }

@@ -30,15 +30,16 @@ bool AIntersectionTestAlgorithm::DoesRayPlaneIntersect(APlaneClass* plane, FVect
 {
 	//Plane normal (n)
 	FVector n = plane->GetPlaneNormal().GetSafeNormal();
+
+	//UE_LOG(LogTemp, Warning, TEXT("Plane normal: %f, %f, %f"), n.X, n.Y, n.Z);
+
 	//Plane origin (p0)
 	FVector p0 = plane->GetPlaneOrigin().GetSafeNormal();
 	//Ray origin (l0)
 	FVector l0 = rayOrigin.GetSafeNormal();
 	//Ray direction(l)
 	FVector l = rayNormal.GetSafeNormal();
-
-	//Distance of interest (t)
-	//t = (p0-l0).n / l.n
+	//UE_LOG(LogTemp, Warning, TEXT("Ray normal : %f, %f, %f"), l.X, l.Y, l.Z);
 	
 	float denominator = FVector::DotProduct(l, n);
 
@@ -47,11 +48,11 @@ bool AIntersectionTestAlgorithm::DoesRayPlaneIntersect(APlaneClass* plane, FVect
 		float numerator = FVector::DotProduct(p0 - l0, n);
 		float t = numerator / denominator;
 
+		UE_LOG(LogTemp, Warning, TEXT("t : %f"), t);
 		GEngine->AddOnScreenDebugMessage(
 						1, 30.f, FColor::Green
-						, TEXT("\nIntersection!"));
+						, FString::Printf(TEXT("Intersection: t = %f"),t));
 			
-
 		return (t >= 0);
 	}
 	
