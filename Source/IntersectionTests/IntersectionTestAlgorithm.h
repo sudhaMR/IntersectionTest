@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 #include "PlaneClass.h"
+#include "AABBClass.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "IntersectionTestAlgorithm.generated.h"
@@ -10,7 +10,6 @@ UCLASS()
 class INTERSECTIONTESTS_API AIntersectionTestAlgorithm : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
 	// Sets default values for this actor's properties
 	AIntersectionTestAlgorithm();
@@ -28,5 +27,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool DoesRayPlaneIntersect(APlaneClass* plane, FVector rayOrigin, FVector rayNormal);
+
+	UFUNCTION(BlueprintCallable)
+	bool DoesLineLineIntersect(FVector aOrigin, FVector aEnd, FVector bOrigin, FVector bEnd);
+
+	UFUNCTION(BlueprintCallable)
+	bool DoesRayAABBIntersect(FVector rayOrigin, FVector rayEnd, AAABBClass* box);
 
 };

@@ -22,12 +22,12 @@ void AIntersectionTestAlgorithm::BeginPlay()
 void AIntersectionTestAlgorithm::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//DoesRayPlaneIntersect(APlaneClass::planeClassObject->planeOrigin, APlaneClass::planeClassObject->planeNormal, 
 }
 
 bool AIntersectionTestAlgorithm::DoesRayPlaneIntersect(APlaneClass* plane, FVector rayOrigin, FVector rayNormal)
 {
+	const FVector2D& fontSize = FVector2D(3.0f, 3.0f);
+
 	//Plane normal (n)
 	FVector n = plane->GetPlaneNormal().GetSafeNormal();
 
@@ -48,88 +48,129 @@ bool AIntersectionTestAlgorithm::DoesRayPlaneIntersect(APlaneClass* plane, FVect
 		float numerator = FVector::DotProduct(p0 - l0, n);
 		float t = numerator / denominator;
 
-		UE_LOG(LogTemp, Warning, TEXT("t : %f"), t);
-		GEngine->AddOnScreenDebugMessage(
+		FVector point = p0 + t * l;
+
+		UE_LOG(LogTemp, Warning, TEXT("dr : %f"), denominator);
+
+		if(denominator > 0 )
+			GEngine->AddOnScreenDebugMessage(
+				1, 30.f, FColor::Green
+				, FString::Printf(TEXT("Dr : %f"), denominator), true, fontSize);
+	
+		/*GEngine->AddOnScreenDebugMessage(
 						1, 30.f, FColor::Green
-						, FString::Printf(TEXT("Intersection: t = %f"),t));
-			
+						, FString::Printf(TEXT("Intersection at = %f, %f, %f"),point.X, point.Y, point.Z),true,fontSize);
+			*/
+
 		return (t >= 0);
 	}
 	
 
 	GEngine->AddOnScreenDebugMessage(
 		1, 30.f, FColor::Red
-		, TEXT("\nNo Intersection!"));
+		, TEXT("\nNo Intersection!"), true, fontSize);
 	return false;
 }
 
-//bool AIntersectionTestAlgorithm::DoesRayPlaneIntersect(APlaneClass* plane, AIntersectionTestsPawn* pawn, FVector SurfaceNormal)
-//{
-//	bool Result = false;
-//
-//	float PlaneD = 0.0f;
-//
-//	FVector RayOrigin = pawn->GetPawnOrigin();
-//	FVector RayDelta = (RayOrigin + pawn->GetPawnEnd());
-//
-//	// Solve normalized surface normal
-//	FVector NormalizedSurfaceNormal = SurfaceNormal.GetSafeNormal();
-//
-//	// Solve d - p0
-//	FVector Diff = RayOrigin - PlaneD;
-//
-//	// Solve ň
-//	FVector DeltaNormal = RayDelta.GetSafeNormal();
-//
-//	// Solve numerator (d - p0*n)
-//	//float numerator = -MyMathLibrary::DotProduct(Diff, NormalizedSurfaceNormal);
-//	float numerator = -1 * (FVector::DotProduct(Diff, NormalizedSurfaceNormal));
-//
-//	// Solve ň*n
-//	//float denominator = MyMathLibrary::DotProduct(DeltaNormal, NormalizedSurfaceNormal);
-//	float denominator = FVector::DotProduct(DeltaNormal, NormalizedSurfaceNormal);
-//
-//	// If denominator is zero, then ray is parallel to the plane
-//	// and there is no intersection
-//	if (denominator == 0.f)
-//	{
-//		GEngine->AddOnScreenDebugMessage(
-//			1, 30.f, FColor::Red
-//			, TEXT("\nRay parallel to plane! No intersection!, GeometricTestLibrary.h:856\n"));
-//
-//		return Result;
-//	}
-//
-//	// Solve d - p0*n / ň*n
-//	float t = numerator / denominator;
-//
-//	// Solve R, the parametric ray
-//	FVector R = RayOrigin + (DeltaNormal*t);
-//
-//	// TODO: Allow intersection only with front of plane (i.e., denominator < 0)
-//	// Thus, intersection only if the ray points in a direction opposite 
-//	// to the normal of the plane.
-//
-//	// Return true if t is within range
-//	// If t < 0 or t > length of ray, intersection does not occur
-//
-//	if (t < 0 || t > R.Size())
-//	{
-//		GEngine->AddOnScreenDebugMessage(
-//			1, 30.f, FColor::Red
-//			, TEXT("\nFAILURE! No intersection!, GeometricTestLibrary.h:877\n"));
-//
-//		Result = false;
-//	}
-//	else
-//	{
-//		GEngine->AddOnScreenDebugMessage(
-//			1, 30.f, FColor::Red
-//			, TEXT("\nSUCCESS! Ray and Plane intersect!, GeometricTestLibrary.h:885\n"));
-//
-//		Result = true;
-//	}
-//
-//	return Result;
-//}
+bool AIntersectionTestAlgorithm::DoesLineLineIntersect(FVector aOrigin, FVector aEnd, FVector bOrigin, FVector bEnd)
+{
+	//Line equation d = ax + by + cz;
 
+	//Line a
+
+	return false;
+}
+
+bool AIntersectionTestAlgorithm::DoesRayAABBIntersect(FVector rayOrigin, FVector rayEnd, AAABBClass* box)
+{
+	float xt, xn;
+
+	bool inside = true;
+
+	if (rayOrigin.X < box->GetMin().X)
+	{
+		xt = box->GetMin().X - rayOrigin.X;
+
+		if (xt > rayEnd.X)
+			return false;
+
+		xt /= rayEnd.X;
+		inside = false;
+		xn = -1.0f;
+	}
+	else if (rayOrigin.X > box->GetMax().X)
+	{
+		xt = box->GetMax().X - rayOrigin.X;
+
+		if (xt < rayEnd.X)
+			return false;
+
+		xt /= rayEnd.X;
+		inside = false;
+		xn = 1.0f;
+	}
+	else
+	{
+		xt = -1.0f;
+	}
+	
+	float yt, yn;
+	if (rayOrigin.Y < box->GetMin().Y)
+	{
+		yt = box->GetMin().Y - rayOrigin.Y;
+
+		if (yt > rayEnd.Y)
+			return false;
+
+		yt /= rayEnd.Y;
+
+		inside = false;
+		yn = -1.0f;
+	}
+	else if (rayOrigin.Y > box->GetMax().Y)
+	{
+		yt = box->GetMax().Y - rayOrigin.Y;
+
+		if (yt < rayEnd.Y)
+			return false;
+
+		yt /= rayEnd.Y;
+		inside = false;
+		yn = 1.0f;
+	}
+	else
+	{
+		yt = -1.0f;
+	}
+
+	float zt, zn;
+	if (rayOrigin.Z < box->GetMin().Z)
+	{
+		zt = box->GetMin().Z - rayOrigin.Z;
+
+		if (zt > rayEnd.Z)
+			return false;
+
+		zt /= rayEnd.Z;
+
+		inside = false;
+		zn = -1.0f;
+	}
+	else if (rayOrigin.Z > box->GetMax().Z)
+	{
+		zt = box->GetMax().Z - rayOrigin.Z;
+
+		if (zt < rayEnd.Z)
+			return false;
+
+		zt /= rayEnd.Z;
+		inside = false;
+		zn = 1.0f;
+	}
+	else
+	{
+		zt = -1.0f;
+	}
+
+	return true;
+}
