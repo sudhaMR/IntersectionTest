@@ -35,12 +35,30 @@ FVector AAABBClass::GetMax()
 	return boxMax;
 }
 
-void AAABBClass::SetMin(FVector min)
+int FindMin(const int &a, const int &b)
 {
-	boxMin = min;
+	int min = a < b ? a : b;
+	return min;
 }
 
-void AAABBClass::SetMax(FVector max)
+int FindMax(const int &a, const int &b)
 {
-	boxMax = max;
+	int max = a > b ? a : b;
+	return max;
+}
+
+void AAABBClass::SetMinMax(FVector origin, FVector extent)
+{
+
+	float boxMinX = FindMin(origin.X - extent.X, origin.X + extent.X);
+	float boxMaxX = FindMax(origin.X - extent.X, origin.X + extent.X);
+
+	float boxMinY = FindMin(origin.Y - extent.Y, origin.Y + extent.Y);
+	float boxMaxY = FindMax(origin.Y - extent.Y, origin.Y + extent.Y);
+
+	float boxMinZ = FindMin(origin.Z - extent.Z, origin.Z + extent.Z);
+	float boxMaxZ = FindMax(origin.Z - extent.Z, origin.Z + extent.Z);
+
+	boxMin = FVector(boxMinX, boxMinY, boxMinZ);
+	boxMax = FVector(boxMaxX, boxMaxY, boxMaxZ);
 }

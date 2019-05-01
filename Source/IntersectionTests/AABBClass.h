@@ -30,10 +30,7 @@ public:
 		FVector GetMax();
 
 	UFUNCTION(BlueprintCallable)
-		void SetMin(FVector min);
-
-	UFUNCTION(BlueprintCallable)
-		void SetMax(FVector max);
+		void SetMinMax(FVector origin, FVector extent);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

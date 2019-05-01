@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #pragma once
+
 #include "PlaneClass.h"
 #include "AABBClass.h"
 #include "CoreMinimal.h"
@@ -26,12 +27,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-	bool DoesRayPlaneIntersect(APlaneClass* plane, FVector rayOrigin, FVector rayNormal);
+	bool DoesRayPlaneIntersect(APlaneClass* plane, FVector rayOrigin, FVector rayNormal, FVector rayEnd);
 
 	UFUNCTION(BlueprintCallable)
 	bool DoesLineLineIntersect(FVector aOrigin, FVector aEnd, FVector bOrigin, FVector bEnd);
 
 	UFUNCTION(BlueprintCallable)
 	bool DoesRayAABBIntersect(FVector rayOrigin, FVector rayEnd, AAABBClass* box);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector AABBIntersectionPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FVector PlaneIntersectionPoint;
 
 };

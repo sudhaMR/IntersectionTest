@@ -220,13 +220,13 @@ void AIntersectionTestsPawn::Tick(float Delta)
 		}
 	}
 
-	FVector const& forwardVector = GetActorForwardVector()* 4000.0f;
+	FVector const& forwardVector = GetActorForwardVector()* 20000.0f;
 	FVector const& actorPos = GetActorLocation();
 	FVector const& endVector = FVector(actorPos.X + forwardVector.X, actorPos.Y + 
 		forwardVector.Y, actorPos.Z + forwardVector.Z);
 	FColor const& color = FColor::Red;
 
-	DrawDebugLine(world, actorPos, endVector, color, false, 0.5f, (uint8)'\000', 5.0f);
+	DrawDebugLine(world, actorPos, endVector, color, false, 0.1f, (uint8)'\000', 10.0f);
 
 	rayOrigin = actorPos;
 	rayEnd = endVector;
